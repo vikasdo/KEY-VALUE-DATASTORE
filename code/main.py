@@ -25,19 +25,21 @@ class dbstore:
 
 	def __init__(self):
 		self.data={}
+		self.value = collections.namedtuple('value',['val','ttl']) 
 
 
 
 	def add(key,value,timeout=0):
-		if key in self.data:
-			raise Exception("The Given key is created already..")
-		
 		try:
+			if key in self.data:
+				raise Exception("The Given key is created already..")
+		
+		
 			if helperfunctions.check_dict_constraints(self.data) and helperfunctions.check_key_constraints(key) and helperfunctions.check_val_constraints(value) :
 				if timeout==0:
-					self.data[key]=(value,timeout)
+					self.data[key]=self.value(value,timeout)
 				else:
-					self.data[key]=(value,time.time()+timeout)
+					self.data[key]=self.value(value,time.time()+timeout)
 
 
 
@@ -49,17 +51,38 @@ class dbstore:
 
 
 	def read(key):
-		if key  in self.data():
-			print()
+		try:
+			if key not in self.data:
+				raise Exception("The Given key is not found Enter another Key..")
+			else:
+				key_data=self.data[key]
+				if 	key_data.ttl<time.time():
 
+					print("The Value is{}".format(key_data.val))
+				else:
 
-
-		except:
+					raise Exception("The Given key Time to live has been expired.")
+			
+		except Exception as e:
+			print("The error is {}".format(e))
 
 
 
 
 	def  delete(key):
-		pass
+		try:
+			if key not in self.data:
+				raise Exception("The Given key is not found Enter another Key..")
+			else:
+				key_data = self.data[key]
+				if 	key_data.ttl<time.time():
+					del self.data[key]
+					print("The key is deleted now")
+				else:
+
+					raise Exception("The Given key Time to live has been expired.")
+			
+		except Exception as e:
+			print("The error is {}".format(e))
 
 
