@@ -1,6 +1,9 @@
 import concurrent.futures
 import time,threading
-from main import dbstore,helperfunctions
+# from code.abc import dbstore
+# from main import dbstore
+from package import code
+# from code import dbstore
 start = time.perf_counter()
 
 
@@ -26,13 +29,13 @@ for i in range(4):
     
     secs = [('name','vikas',113),('street','canal lane',3),('city','hyderabad',2),('phone2',9392322121,322),('states','Telangana',1)]
     obj.delete(secs[i][0],secs[i][1],secs[i][2])
-#     t = threading.Thread(target=obj.add , args=[secs[i][0],secs[i][1],secs[i][2]])
-#     t.start()
+    t = threading.Thread(target=obj.add , args=[secs[i][0],secs[i][1],secs[i][2]])
+    t.start()
     
-#     threads.append(t)
+    threads.append(t)
 
-# for thread in threads:
-#     thread.join()
+for thread in threads:
+    thread.join()
 # for i in range(1):
     
 #     secs = [('state','Telangana',1)]
